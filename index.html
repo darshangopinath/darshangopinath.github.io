@@ -11,8 +11,22 @@
      <meta property="og:description" content="IT Consultant and Frontend/Mobile engineering leader. AI, mobility and cross-platform UI.">
      <meta property="og:url" content="https://www.darshangopinath.com/">
      <meta property="og:image" content="https://www.darshangopinath.com/wp-content/uploads/2018/11/profile.jpg">
-     <link type="text/css" media="all" href="wp-content/cache/autoptimize/css/autoptimize_c11f4c9683c22006dfff77eaaf28404d.css" rel="stylesheet">
+     <link type="text/css" media="all" href="wp-content/cache/autoptimize/css/autoptimize_c11f4c9683c22006dfff77eaaf28404d.css?v=2" rel="stylesheet">
      <link type="text/css" media="all" href="assets/css/poppins.css" rel="stylesheet">
+     <link type="text/css" media="all" href="assets/css/dark.css?v=1" rel="stylesheet" id="dark-css">
+     <link type="text/css" media="all" href="assets/css/theme.css?v=2" rel="stylesheet">
+     <meta name="color-scheme" content="dark light">
+     <meta name="theme-color" content="#26262d">
+     <script>
+        // Pick the theme before first paint: saved choice, else the device setting (no flash on reload)
+        (function () {
+           var t; try { t = localStorage.getItem('theme'); } catch (e) {}
+           if (t !== 'light' && t !== 'dark') t = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+           document.documentElement.setAttribute('data-theme', t);
+           document.getElementById('dark-css').media = t === 'dark' ? 'all' : 'not all';
+           document.querySelector('meta[name="theme-color"]').content = t === 'dark' ? '#26262d' : '#eef1f6';
+        })();
+     </script>
      
      <script src="assets/js/jquery-1.12.4.min.js"></script>
 
@@ -67,6 +81,12 @@
      </style>
    </head>
    <body class="home page-template page-template-template-layout-builder page-template-template-layout-builder-php page page-id-17">
+      <button type="button" class="theme-toggle" role="switch" aria-checked="true" aria-label="Dark mode" title="Switch to light mode">
+         <span class="knob">
+            <svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>
+         </span>
+      </button>
       <div class="page page_wrap theme-style-classic theme-style-dark">
          <div class="preloader">
             <div class="centrize full-width">
@@ -930,6 +950,33 @@
                   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); }
                });
             });
+         })();
+      </script>
+      <script>
+         // Theme toggle: switch, remember the choice, follow the device setting until the visitor chooses
+         (function () {
+            var root = document.documentElement, btn = document.querySelector('.theme-toggle'),
+                dark = document.getElementById('dark-css'), meta = document.querySelector('meta[name="theme-color"]');
+            function apply(t, save) {
+               root.setAttribute('data-theme', t);
+               dark.media = t === 'dark' ? 'all' : 'not all';
+               meta.content = t === 'dark' ? '#26262d' : '#eef1f6';
+               btn.setAttribute('aria-checked', t === 'dark');
+               btn.title = t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+               if (save) { try { localStorage.setItem('theme', t); } catch (e) {} }
+            }
+            apply(root.getAttribute('data-theme'), false);
+            btn.addEventListener('click', function () {
+               root.classList.add('theme-anim');
+               apply(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+               setTimeout(function () { root.classList.remove('theme-anim'); }, 450);
+            });
+            if (window.matchMedia) {
+               matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+                  var saved; try { saved = localStorage.getItem('theme'); } catch (x) {}
+                  if (saved !== 'light' && saved !== 'dark') apply(e.matches ? 'light' : 'dark', false);
+               });
+            }
          })();
       </script>
    </body>
