@@ -20,6 +20,12 @@
      <link rel="icon" href="favicon.ico" sizes="32x32">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <style>
+        .mfp-wrap{overscroll-behavior:contain}
+        .mfp-wrap.popup-box-inline .mfp-close{top:12px;right:12px;width:40px;height:40px;padding:0;line-height:0;font-size:0;color:transparent;opacity:1;border:1.5px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(24,24,30,.85);box-shadow:0 2px 10px rgba(0,0,0,.45);transition:background .2s,border-color .2s,transform .25s}
+        .mfp-wrap.popup-box-inline .mfp-close:before,.mfp-wrap.popup-box-inline .mfp-close:after{content:"";position:absolute;left:50%;top:50%;width:18px;height:2px;margin:-1px 0 0 -9px;border-radius:1px;background:#fff;transform:rotate(45deg)}
+        .mfp-wrap.popup-box-inline .mfp-close:after{transform:rotate(-45deg)}
+        .mfp-wrap.popup-box-inline .mfp-close:hover,.mfp-wrap.popup-box-inline .mfp-close:focus-visible{background:#ff9800;border-color:#ff9800;transform:rotate(90deg)}
+        .mfp-wrap.popup-box-inline .mfp-close:focus-visible{outline:2px solid #fff;outline-offset:2px}
         .resume-items .resume-item p.exp-point{font-size:12px;line-height:1.55;margin:0 0 11px}
         .resume-items .resume-item p.exp-point:last-child{margin-bottom:0}
         @font-face{font-family:"Ionicons";src:url(wp-content/themes/ryancv/assets/fonts/ionicons.woff?v=2.0.1) format("woff"),url(wp-content/themes/ryancv/assets/fonts/ionicons.ttf?v=2.0.1) format("truetype");font-weight:normal;font-style:normal}
@@ -855,5 +861,27 @@
          }
       </script>
       <script type="text/javascript" src="wp-content/cache/autoptimize/js/autoptimize_422aae738611539b87e9298b67efe3ab.js"></script>
+      <script>
+         // Popups: lock the page behind them on phones too (Magnific skips the lock when it detects a mobile browser)
+         jQuery.extend(jQuery.magnificPopup.defaults, {fixedContentPos: true, fixedBgPos: true});
+
+         // Touch devices: the back gesture/button closes an open popup instead of leaving the page
+         (function ($) {
+            if (!history.pushState || !window.matchMedia || !matchMedia('(pointer: coarse)').matches) return;
+            var pushed = false;
+            $.extend(true, $.magnificPopup.defaults, {callbacks: {
+               open: function () {
+                  history.pushState({popup: 1}, '');
+                  pushed = true;
+               },
+               close: function () {
+                  if (pushed) { pushed = false; history.back(); }   // closed via X / outside tap: drop the extra history entry
+               }
+            }});
+            window.addEventListener('popstate', function () {
+               if (pushed) { pushed = false; $.magnificPopup.close(); }   // back gesture
+            });
+         })(jQuery);
+      </script>
    </body>
 </html>
