@@ -10,6 +10,8 @@ html[data-theme="light"] .content .title .first-word,html[data-theme="light"] .c
 html[data-theme="light"] input:focus,html[data-theme="light"] textarea:focus,html[data-theme="light"] .revs-carousel .owl-dots .owl-dot,html[data-theme="light"] .custom-header,html[data-theme="light"] .post-text-bottom .tags-links a,html[data-theme="light"] .post-text-bottom .tags-links span,html[data-theme="light"] .content-sidebar .tagcloud a,html[data-theme="light"] .resume-items .resume-item.active .date,html[data-theme="light"] .box-item .date,html[data-theme="light"] .content.skills .skills-list.circles .progress .bar,html[data-theme="light"] .content.skills .skills-list.circles .progress .fill{border-color:#a36200}
 html[data-theme="light"] blockquote{border-left-color:#a36200}
 
+/* light mode: daytime hero image (the inline style sets the dark one, hence !important) */
+html[data-theme="light"] .card-started .profile .slide{background-image:url(../images/bg-light.jpg)!important}
 /* light mode: lift faint greys to readable contrast */
 html[data-theme="light"] .resume-items .resume-item .date{color:#656b76;border-color:#a9afba}
 html[data-theme="light"] .resume-items .resume-item .company{color:#666c77}

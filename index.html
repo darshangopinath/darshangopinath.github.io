@@ -14,7 +14,7 @@
      <link type="text/css" media="all" href="wp-content/cache/autoptimize/css/autoptimize_c11f4c9683c22006dfff77eaaf28404d.css?v=2" rel="stylesheet">
      <link type="text/css" media="all" href="assets/css/poppins.css" rel="stylesheet">
      <link type="text/css" media="all" href="assets/css/dark.css?v=1" rel="stylesheet" id="dark-css">
-     <link type="text/css" media="all" href="assets/css/theme.css?v=2" rel="stylesheet">
+     <link type="text/css" media="all" href="assets/css/theme.css?v=3" rel="stylesheet">
      <meta name="color-scheme" content="dark light">
      <meta name="theme-color" content="#26262d">
      <script>
@@ -34,6 +34,13 @@
      <link rel="icon" href="favicon.ico" sizes="32x32">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <style>
+        /* Narrow phones: let the header subtitle wrap to two lines only when a typed phrase cannot fit on one (class set by script) */
+        .hdr-2line .header{height:auto}
+        .hdr-2line .header .profile{display:grid;grid-template-columns:44px 1fr;column-gap:14px;height:auto;min-height:64px}
+        .hdr-2line .header .profile .image{grid-row:1/3;margin-right:0;float:none}
+        .hdr-2line .header .profile .title,.hdr-2line .header .profile .subtitle{grid-column:2}
+        .hdr-2line .header .profile .subtitle{display:block;white-space:normal;overflow:visible;text-overflow:clip;min-height:28px}
+        .hdr-2line .card-started{margin-top:7px}
         .revs-item .text{font-size:24px;line-height:1.35;padding:0 44px}
         .revs-item .text:before,.revs-item .text:after{width:20px;height:20px}
         @media (max-width:520px){.revs-item .text{font-size:20px;padding:0 34px}.revs-item .text:before,.revs-item .text:after{width:16px;height:16px}}
@@ -977,6 +984,28 @@
                   if (saved !== 'light' && saved !== 'dark') apply(e.matches ? 'light' : 'dark', false);
                });
             }
+         })();
+      </script>
+      <script>
+         // Header subtitle: use two lines only if the longest typed phrase cannot fit on one line (narrow phones)
+         (function () {
+            var root = document.documentElement, prof = document.querySelector('.header .profile'),
+                sub = prof && prof.querySelector('.subtitle'),
+                phrases = [].map.call(document.querySelectorAll('.header .profile .typing-title p'), function (p) { return p.textContent.trim(); }),
+                ctx = document.createElement('canvas').getContext('2d'), timer;
+            if (!prof || !sub || !phrases.length) return;
+            function check() {
+               var ps = getComputedStyle(prof);
+               if (ps.display === 'none') { root.classList.remove('hdr-2line'); return; }   // tablet/desktop: header profile is hidden
+               var cs = getComputedStyle(sub);
+               ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+               var widest = Math.max.apply(null, phrases.map(function (t) { return ctx.measureText(t).width; }));
+               var room = prof.clientWidth - parseFloat(ps.paddingLeft) - parseFloat(ps.paddingRight) - 44 - 14;   // minus avatar and its gap
+               root.classList.toggle('hdr-2line', widest > room);
+            }
+            check();
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(check);
+            window.addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(check, 120); });
          })();
       </script>
    </body>
