@@ -20,6 +20,15 @@
      <link rel="icon" href="favicon.ico" sizes="32x32">
      <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <style>
+        /* Popup open/close animation (card = .mfp-wrap; final size applied from the first frame so it never jumps) */
+        .mfp-wrap.mfp-close-btn-in.mfp-auto-cursor.popup-box-inline{top:10%;height:80%}
+        .mfp-wrap.popup-box-inline{opacity:0;transform:translateY(24px) scale(.97);transition:opacity .28s ease,transform .32s cubic-bezier(.2,.8,.2,1)}
+        .mfp-wrap.popup-box-inline.mfp-ready{opacity:1;transform:none}
+        .mfp-wrap.popup-box-inline.mfp-removing{opacity:0;transform:translateY(16px) scale(.98);transition-duration:.22s}
+        .mfp-bg.popup-box-inline{opacity:0;transition:opacity .28s ease}
+        .mfp-bg.popup-box-inline.mfp-ready{opacity:.8}
+        .mfp-bg.popup-box-inline.mfp-removing{opacity:0;transition-duration:.22s}
+        @media (prefers-reduced-motion:reduce){.mfp-wrap.popup-box-inline,.mfp-bg.popup-box-inline{transition:none;transform:none}}
         .mfp-wrap{overscroll-behavior:contain}
         .mfp-wrap.popup-box-inline .mfp-close{top:12px;right:12px;width:40px;height:40px;padding:0;line-height:0;font-size:0;color:transparent;opacity:1;border:1.5px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(24,24,30,.85);box-shadow:0 2px 10px rgba(0,0,0,.45);transition:background .2s,border-color .2s,transform .25s}
         .mfp-wrap.popup-box-inline .mfp-close:before,.mfp-wrap.popup-box-inline .mfp-close:after{content:"";position:absolute;left:50%;top:50%;width:18px;height:2px;margin:-1px 0 0 -9px;border-radius:1px;background:#fff;transform:rotate(45deg)}
@@ -863,7 +872,8 @@
       <script type="text/javascript" src="wp-content/cache/autoptimize/js/autoptimize_422aae738611539b87e9298b67efe3ab.js"></script>
       <script>
          // Popups: lock the page behind them on phones too (Magnific skips the lock when it detects a mobile browser)
-         jQuery.extend(jQuery.magnificPopup.defaults, {fixedContentPos: true, fixedBgPos: true});
+         jQuery.extend(jQuery.magnificPopup.defaults, {fixedContentPos: true, fixedBgPos: true,
+            removalDelay: (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 0 : 230});   // delay lets the close animation play
 
          // Touch devices: the back gesture/button closes an open popup instead of leaving the page
          (function ($) {
